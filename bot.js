@@ -9,7 +9,12 @@ function createBot() {
         host: serverIp,
         port: serverPort,
         username: botName,
-        version: false // Auto-detect the server version
+        version: false, // Auto-detect version
+        connectTimeout: 30000 // Increase connection timeout to 30 seconds
+    });
+
+    bot.on('connect', () => {
+        console.log('Attempting to connect...');
     });
 
     bot.on('spawn', () => {
@@ -29,9 +34,8 @@ function createBot() {
 
     bot.on('error', (err) => {
         console.error(`Error: ${err.message}`);
-        // Attempt to reconnect if there's a connection error
-        if (err.message.includes('ECONNREFUSED')) {
-            console.log('Connection refused. Retrying in 5 seconds...');
+        if (err.code === 'ECONNRESET') {
+            console.log('Connection was reset. Retrying in 5 seconds...');
             setTimeout(createBot, 5000);
         }
     });
