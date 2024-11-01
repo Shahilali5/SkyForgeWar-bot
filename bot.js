@@ -9,7 +9,7 @@ function createBot() {
         host: serverIp,
         port: serverPort,
         username: botName,
-        version: '1.20.1'
+        version: false // Auto-detect the server version
     });
 
     bot.on('spawn', () => {
@@ -28,8 +28,13 @@ function createBot() {
     });
 
     bot.on('error', (err) => {
-        console.log(`Error: ${err.message}`);
+        console.error(`Error: ${err.message}`);
+        // Attempt to reconnect if there's a connection error
+        if (err.message.includes('ECONNREFUSED')) {
+            console.log('Connection refused. Retrying in 5 seconds...');
+            setTimeout(createBot, 5000);
+        }
     });
 }
 
-createBot()
+createBot();
