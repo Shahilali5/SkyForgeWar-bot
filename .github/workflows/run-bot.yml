@@ -16,11 +16,11 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '10.x'
+          node-version: '14.x'  # Update to 14.x or higher
 
       - name: Install dependencies
         run: npm install
 
       - name: Run Minecraft Bot
         run: |
-          nohup node bot.js 
+          nohup node bot.js &
